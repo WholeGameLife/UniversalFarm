@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>宇宙农场 · Universal Farm</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="src/view/styles/main.css" />
+  <!-- three.js 通过 import map 映射到本地 node_modules，无需打包工具 -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./node_modules/three/build/three.module.js",
+        "three/addons/": "./node_modules/three/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body class="mode-3d">
+  <!-- 启动诊断：必须是普通脚本、放在所有模块之前，模块语法错误 / 导入失败也能显示在页面上 -->
+  <script>
+    (function () {
+      var box = null;
+      var lines = [];
+      function fmt(e) {
+        if (!e) return '';
+        if (typeof e === 'string') return e;
+        return (e.message || String(e)) + (e.stack ? '\n' + e.stack : '');
+      }
+      function show(title, detail) {
+        lines.push('【' + title + '】\n' + fmt(detail));
+        if (!document.body) return;
+        if (!box) {
+          box = document.createElement('div');
+          box.id = 'boot-error';
+          box.innerHTML =
+            '<h2>宇宙农场启动出错</h2>' +
+            '<pre></pre>' +
+            '<p>可以先试试：① 按 <b>Ctrl + F5</b> 强制刷新；② 关掉旧的服务器窗口，重新双击 <b>start.bat</b>；' +
+            '③ 在地址后面加 <b>?gfx=low</b> 用低画质打开。<br>还不行的话，点下面按钮把错误信息复制下来发给我。</p>' +
+            '<button type="button">复制错误信息</button> <button type="button">关闭</button>';
+          document.body.appendChild(box);
+          var btns = box.querySelectorAll('button');
+          btns[0].onclick = function () {
+            var t = lines.join('\n\n') + '\n\nUA: ' + navigator.userAgent;
+            (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(
+              function () { btns[0].textContent = '已复制 ✓'; },
+              function () { prompt('复制下面的内容：', t); }
+            );
+          };
+          btns[1].onclick = function () { box.style.display = 'none'; };
+        }
+        box.style.display = '';
+        box.querySelector('pre').textContent = lines.join('\n\n');
+        var ld = document.getElementById('boot-loading');
+        if (ld && !window.__booted) ld.remove();
+      }
+      window.__bootError = show;
+      window.addEventListener('error', function (e) {
+        var t = e.target;
+        if (t && t !== window && (t.src || t.href)) {
+          show('文件加载失败', (t.src || t.href) + '\n（可能是某个文件缺失、浏览器用了旧缓存，或服务器没启动）');
+          return;
+        }
+        show('脚本错误', (e.message || '') + '\n位置：' + (e.filename || '') + ':' + (e.lineno || '') + '\n' + fmt(e.error));
+      }, true);
+      window.addEventListener('unhandledrejection', function (e) { show('脚本错误', e.reason); });
+      if (location.protocol === 'file:') {
+        document.addEventListener('DOMContentLoaded', function () {
+          show('打开方式不对', '不能直接双击 index.html 打开。请双击项目文件夹里的 start.bat，它会启动本地服务器并自动打开浏览器。');
+        });
+      }
+      setTimeout(function () {
+        if (!window.__booted && !box) show('启动超时', '30 秒内没有完成启动。请按 F12 打开控制台，看看有没有红色报错。');
+      }, 30000);
+    })();
+  </script>
+  <div id="boot-loading"><div class="ring"></div><p>正在生成星球…</p></div>
+  <div id="world"></div>
+  <div id="ui">
+    <header id="hud"></header>
+    <div id="planet-banner"></div>
+    <aside class="side" id="side">
+      <nav id="tabs"></nav>
+      <div id="panel"></div>
+    </aside>
+    <div id="prompt"></div>
+    <div id="toolbar"></div>
+    <div id="help">WASD 移动 · Shift 冲刺 · 空格 喷射 · 拖拽 旋转镜头 · 滚轮 缩放 · 点击/F 交互 · 1-9 切换工具 · Tab 面板 · G 画质</div>
+  </div>
+  <div id="toasts"></div>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>种子档案室 · Universal Farm Seed Editor</title>
+  <link rel="stylesheet" href="editor.css" />
+</head>
+<body>
+  <header class="masthead">
+    <div class="brand"><span class="seal">禾</span><div><span class="eyebrow">UNIVERSAL FARM / FIELD NOTES</span><h1>种子档案室</h1></div></div>
+    <div class="header-actions"><span id="save-state" class="save-state">本机草稿</span><button id="import-button">导入数据</button><button id="export-json">导出 JSON</button><button id="export-js" class="primary">导出 crops.js ↗</button></div>
+    <input id="import-file" type="file" accept=".json,.js" hidden />
+  </header>
+  <div class="workspace">
+    <aside class="library"><div class="library-heading"><span class="eyebrow">01 / SEED LIBRARY</span><button id="add-crop" class="round" title="新增作物">＋</button></div><h2>作物索引 <small id="crop-count"></small></h2><input id="search" class="search" placeholder="搜索名称、ID、用途…" aria-label="搜索作物" /><nav id="crop-list" aria-label="作物列表"></nav><div class="library-foot"><p>独立 · 离线 · 数据驱动</p><p>无需启动游戏。草稿保存在此浏览器；导出文件才是可迁移的数据。</p><button id="restore-defaults" class="text-button">恢复内置图鉴</button></div></aside>
+    <main class="document"><div class="document-heading"><div><span class="eyebrow">02 / CULTIVATION RECORD</span><h2 id="record-title"></h2></div><div class="record-actions"><button id="duplicate">复制</button><button id="delete-crop" class="danger">删除</button></div></div><div id="errors" class="validation" role="status"></div><form id="crop-form" novalidate></form></main>
+    <aside class="inspector"><span class="eyebrow">03 / GROWTH & VALUE</span><div id="preview"></div><div class="scope-note"><b>当前玩法边界</b><p>已启用：土地、浇水周期、缺水枯萎、施肥、品质、连收、售价、食用体力。</p><p>已定义但尚未启用：星球气候、野外生成、加工设备。啤酒花的酿酒配方是未来接口，不会在这版自动产酒。</p></div><div class="scope-note"><b>导入游戏</b><p>游戏 → 农场 → 导入独立编辑器数据 → 选择 JSON 或 crops.js。</p><p>更新默认数据：用导出的 crops.js 替换游戏 src/data/crops.js。不要改动已有存档正在使用的 ID。</p></div></aside>
+  </div>
+  <div id="toast" role="status"></div>
+  <script src="catalog.js"></script>
+  <script src="editor.js"></script>
+</body>
+</html>

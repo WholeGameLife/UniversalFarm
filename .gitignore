@@ -1,0 +1,19 @@
+# Dependencies and local tool output
+node_modules/
+__pycache__/
+.pytest_cache/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+.env
+.env.*
+!.env.example
+
+# Local editor and OS files
+.DS_Store
+Thumbs.db
+*.swp
+
+# Generated local captures
+playwright-report/
+test-results/

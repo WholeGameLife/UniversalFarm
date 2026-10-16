@@ -1,0 +1,15 @@
+{
+  "name": "universal-farm",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "宇宙农场：种田 + 挖矿 + 探索（HTML/JS）",
+  "scripts": {
+    "start": "python serve.py",
+    "test": "node --test tests/",
+    "editor:sync": "node scripts/sync-seed-editor.mjs"
+  },
+  "dependencies": {
+    "three": "^0.169.0"
+  }
+}
